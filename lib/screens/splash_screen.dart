@@ -8,17 +8,59 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
-  // Keeps track of which splash page the user is viewing.
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  // Page controller
   final PageController _pageController = PageController();
 
   int _currentPage = 0;
 
+  // Animation controller
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Main animation controller
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    );
+
+    // Fade animation
+    _fadeAnimation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeOut,
+    );
+
+    // Slide animation
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.25),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeOutCubic,
+      ),
+    );
+
+    // Start animation
+    _animationController.forward();
+  }
+
   @override
   void dispose() {
     _pageController.dispose();
+    _animationController.dispose();
     super.dispose();
   }
+
+  // ============================================================
+  // BUILD
+  // ============================================================
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +70,10 @@ class _SplashScreenState extends State<SplashScreen> {
       body: SafeArea(
         child: Column(
           children: [
+            // ====================================================
+            // SKIP BUTTON
+            // ====================================================
 
-            // Skip button
             Align(
               alignment: Alignment.topRight,
               child: Padding(
@@ -39,7 +83,12 @@ class _SplashScreenState extends State<SplashScreen> {
                 ),
                 child: TextButton(
                   onPressed: () {
-                    // Home navigation will be added later.
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomeScreen(),
+                      ),
+                    );
                   },
                   child: const Text(
                     'Skip',
@@ -52,7 +101,10 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
 
-            // Swipeable pages
+            // ====================================================
+            // SWIPEABLE SPLASH PAGES
+            // ====================================================
+
             Expanded(
               child: PageView(
                 controller: _pageController,
@@ -64,22 +116,31 @@ class _SplashScreenState extends State<SplashScreen> {
                 },
 
                 children: [
+                  // ------------------------------------------------
+                  // PAGE 1
+                  // ------------------------------------------------
 
-                  // ---------------- PAGE 1 ----------------
                   _buildPage(
                     image: 'assets/images/un_logo.jpg',
                     title: 'Welcome to Urbanova',
                     subtitle: 'Swipe to explore',
                   ),
 
-                  // ---------------- PAGE 2 ----------------
+                  // ------------------------------------------------
+                  // PAGE 2
+                  // ------------------------------------------------
+
                   _buildPage(
                     title:
                         'We build the tech, the brand, and the growth — together.',
-                    subtitle: 'Turning ideas into meaningful digital experiences.',
+                    subtitle:
+                        'Turning ideas into meaningful digital experiences.',
                   ),
 
-                  // ---------------- PAGE 3 ----------------
+                  // ------------------------------------------------
+                  // PAGE 3
+                  // ------------------------------------------------
+
                   _buildPage(
                     title: 'Let’s create something amazing.',
                     subtitle: 'Your digital journey starts here.',
@@ -89,15 +150,26 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
 
-            // Page indicators
+            // ====================================================
+            // PAGE INDICATORS
+            // ====================================================
+
             Padding(
-              padding: const EdgeInsets.only(bottom: 30),
+              padding: const EdgeInsets.only(
+                bottom: 30,
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _buildDot(isActive: _currentPage == 0),
-                  _buildDot(isActive: _currentPage == 1),
-                  _buildDot(isActive: _currentPage == 2),
+                  _buildDot(
+                    isActive: _currentPage == 0,
+                  ),
+                  _buildDot(
+                    isActive: _currentPage == 1,
+                  ),
+                  _buildDot(
+                    isActive: _currentPage == 2,
+                  ),
                 ],
               ),
             ),
@@ -107,91 +179,137 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  // Reusable splash page
+  // ============================================================
+  // REUSABLE SPLASH PAGE
+  // ============================================================
+
   Widget _buildPage({
     String? image,
     required String title,
     required String subtitle,
-    bool showButton =false,
-
+    bool showButton = false,
   }) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 30,
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // ====================================================
+            // LOGO
+            // ====================================================
 
             if (image != null) ...[
-              Image.asset(
-                image,
-                width: 180,
+              FadeTransition(
+                opacity: _fadeAnimation,
+                child: Image.asset(
+                  image,
+                  width: 180,
+                ),
               ),
 
               const SizedBox(height: 30),
             ],
 
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF001465),
+            // ====================================================
+            // TITLE
+            // ====================================================
+
+            FadeTransition(
+              opacity: _fadeAnimation,
+              child: SlideTransition(
+                position: _slideAnimation,
+                child: Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF001465),
+                  ),
+                ),
               ),
             ),
 
             const SizedBox(height: 20),
 
-            Text(
-              subtitle,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 15,
-                color: Colors.grey,
+            // ====================================================
+            // SUBTITLE
+            // ====================================================
+
+            FadeTransition(
+              opacity: _fadeAnimation,
+              child: Text(
+                subtitle,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 15,
+                  color: Colors.grey,
+                ),
               ),
             ),
-            if (showButton) ...[
-  const SizedBox(height: 35),
 
-  ElevatedButton(
-    onPressed: () {
-      Navigator.pushReplacement(
-        context, 
-        MaterialPageRoute(builder: (context) => const HomeScreen(),
-      ),
-      );
-    },
-    style: ElevatedButton.styleFrom(
-      backgroundColor: const Color(0xFF003EBE),
-      foregroundColor: Colors.white,
-      padding: const EdgeInsets.symmetric(
-        horizontal: 45,
-        vertical: 15,
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30),
-      ),
-    ),
-    child: const Text(
-      'Get Started',
-      style: TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.w600,
-      ),
-    ),
-  ),
-],
+            // ====================================================
+            // GET STARTED BUTTON
+            // ====================================================
+
+            if (showButton) ...[
+              const SizedBox(height: 35),
+
+              FadeTransition(
+                opacity: _fadeAnimation,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomeScreen(),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF003EBE),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 45,
+                      vertical: 15,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                  child: const Text(
+                    'Get Started',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ],
         ),
       ),
     );
   }
 
-  Widget _buildDot({required bool isActive}) {
+  // ============================================================
+  // PAGE DOT
+  // ============================================================
+
+  Widget _buildDot({
+    required bool isActive,
+  }) {
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 250),
-      margin: const EdgeInsets.symmetric(horizontal: 4),
+      duration: const Duration(
+        milliseconds: 250,
+      ),
+      margin: const EdgeInsets.symmetric(
+        horizontal: 4,
+      ),
       width: isActive ? 10 : 8,
       height: isActive ? 10 : 8,
       decoration: BoxDecoration(

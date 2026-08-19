@@ -2,32 +2,26 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   // Urbanova Brand Colors
-  static const Color primaryBlue = Color(0xFF003EBE);
-  static const Color brightBlue = Color(0xFF0761DA);
-  static const Color darkBlue = Color(0xFF001465);
+  static const Color deepBlue = Color(0xFF003EBE);
+  static const Color skyBlue = Color(0xFF0761DA);
+  static const Color navyBlue = Color(0xFF001465);
 
-  static const Color primaryGreen = Color(0xFF089934);
+  static const Color emeraldGreen = Color(0xFF089934);
   static const Color limeGreen = Color(0xFF7CD523);
 
-  static const Color white = Colors.white;
-  static const Color black = Colors.black;
+  // Gradient Colors
+  static const Color blueGradientStart = Color(0xFF001465);
+  static const Color blueGradientEnd = Color(0xFF0761DA);
 
-  // Urbanova Gradients
+  static const Color greenGradientStart = Color(0xFF7CD523);
+  static const Color greenGradientEnd = Color(0xFF089934);
 
+  // Reusable Urbanova Gradients
   static const LinearGradient blueGradient = LinearGradient(
     colors: [
-      darkBlue,
-      primaryBlue,
-      brightBlue,
-    ],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-
-  static const LinearGradient blueGreenGradient = LinearGradient(
-    colors: [
-      brightBlue,
-      primaryGreen,
+      navyBlue,
+      deepBlue,
+      skyBlue,
     ],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
@@ -35,17 +29,8 @@ class AppColors {
 
   static const LinearGradient greenGradient = LinearGradient(
     colors: [
-      primaryGreen,
-      limeGreen,
-    ],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-
-  static const LinearGradient darkBlueGradient = LinearGradient(
-    colors: [
-      darkBlue,
-      primaryBlue,
+      greenGradientStart,
+      greenGradientEnd,
     ],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
