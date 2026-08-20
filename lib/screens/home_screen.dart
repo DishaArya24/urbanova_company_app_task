@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../core/app_colors.dart';
 import 'about_us_screen.dart';
+import 'services_screen.dart';
+import 'contact_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -55,15 +57,15 @@ class _HomeScreenState extends State<HomeScreen>
     return Scaffold(
       backgroundColor: Colors.white,
 
-      // ---------------------------------------------------------
+      // =========================================================
       // DRAWER
-      // ---------------------------------------------------------
+      // =========================================================
 
       endDrawer: _buildMobileDrawer(),
 
-      // ---------------------------------------------------------
+      // =========================================================
       // BODY
-      // ---------------------------------------------------------
+      // =========================================================
 
       body: SafeArea(
         child: LayoutBuilder(
@@ -89,9 +91,9 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
-  // ============================================================
+  // =========================================================
   // NAVBAR
-  // ============================================================
+  // =========================================================
 
   Widget _buildNavbar(bool isMobile) {
     return Container(
@@ -110,6 +112,7 @@ class _HomeScreenState extends State<HomeScreen>
                 height: 38,
                 fit: BoxFit.contain,
               ),
+
               const SizedBox(width: 10),
 
               ShaderMask(
@@ -136,11 +139,50 @@ class _HomeScreenState extends State<HomeScreen>
 
           const Spacer(),
 
+          // DESKTOP NAVIGATION
           if (!isMobile) ...[
-            _buildNavText('Home'),
-            _buildNavText('Services'),
-            _buildNavText('About Us'),
-            _buildNavText('Contact'),
+            _buildNavText(
+              'Home',
+              onTap: () {
+                // Already on Home
+              },
+            ),
+
+            _buildNavText(
+              'Services',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ServicesScreen(),
+                  ),
+                );
+              },
+            ),
+
+            _buildNavText(
+              'About Us',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AboutUsScreen(),
+                  ),
+                );
+              },
+            ),
+
+            _buildNavText(
+              'Contact',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ContactScreen(),
+                  ),
+                );
+              },
+            ),
           ],
 
           // HAMBURGER
@@ -163,23 +205,33 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
-  Widget _buildNavText(String text) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 14),
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: AppColors.navyBlue,
+  Widget _buildNavText(
+    String text, {
+    VoidCallback? onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 14,
+          vertical: 8,
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppColors.navyBlue,
+          ),
         ),
       ),
     );
   }
 
-  // ============================================================
+  // =========================================================
   // HERO
-  // ============================================================
+  // =========================================================
 
   Widget _buildHero(bool isMobile) {
     return Container(
@@ -342,7 +394,9 @@ class _HomeScreenState extends State<HomeScreen>
             borderRadius: BorderRadius.circular(10),
           ),
         ),
+
         const SizedBox(width: 10),
+
         Text(
           text,
           style: const TextStyle(
@@ -355,6 +409,10 @@ class _HomeScreenState extends State<HomeScreen>
       ],
     );
   }
+
+  // =========================================================
+  // PRIMARY BUTTON
+  // =========================================================
 
   Widget _buildPrimaryButton() {
     return MouseRegion(
@@ -373,11 +431,18 @@ class _HomeScreenState extends State<HomeScreen>
         scale: _isButtonHovered ? 1.03 : 1,
         duration: const Duration(milliseconds: 180),
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ServicesScreen(),
+              ),
+            );
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.deepBlue,
             foregroundColor: Colors.white,
-            elevation: 3,
+            elevation: 4,
             padding: const EdgeInsets.symmetric(
               horizontal: 22,
               vertical: 16,
@@ -396,7 +461,9 @@ class _HomeScreenState extends State<HomeScreen>
                   fontWeight: FontWeight.w600,
                 ),
               ),
+
               SizedBox(width: 8),
+
               Icon(
                 Icons.arrow_forward_rounded,
                 size: 18,
@@ -408,9 +475,9 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
-  // ============================================================
+  // =========================================================
   // SERVICES
-  // ============================================================
+  // =========================================================
 
   Widget _buildServices(bool isMobile) {
     return Container(
@@ -446,13 +513,17 @@ class _HomeScreenState extends State<HomeScreen>
                       'Software Development',
                       'Digital products built to solve real business problems.',
                     ),
+
                     const SizedBox(height: 18),
+
                     _serviceCard(
                       Icons.auto_awesome_rounded,
                       'Brand Design',
                       'Visual identities that make businesses memorable.',
                     ),
+
                     const SizedBox(height: 18),
+
                     _serviceCard(
                       Icons.trending_up_rounded,
                       'Performance Marketing',
@@ -470,7 +541,9 @@ class _HomeScreenState extends State<HomeScreen>
                         'Digital products built to solve real business problems.',
                       ),
                     ),
+
                     const SizedBox(width: 20),
+
                     Expanded(
                       child: _serviceCard(
                         Icons.auto_awesome_rounded,
@@ -478,7 +551,9 @@ class _HomeScreenState extends State<HomeScreen>
                         'Visual identities that make businesses memorable.',
                       ),
                     ),
+
                     const SizedBox(width: 20),
+
                     Expanded(
                       child: _serviceCard(
                         Icons.trending_up_rounded,
@@ -555,9 +630,9 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
-  // ============================================================
+  // =========================================================
   // WHO WE ARE
-  // ============================================================
+  // =========================================================
 
   Widget _buildWhoWeAre(bool isMobile) {
     return Container(
@@ -572,7 +647,9 @@ class _HomeScreenState extends State<HomeScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _aboutImage(),
+
                 const SizedBox(height: 35),
+
                 _aboutText(),
               ],
             )
@@ -581,7 +658,9 @@ class _HomeScreenState extends State<HomeScreen>
                 Expanded(
                   child: _aboutImage(),
                 ),
+
                 const SizedBox(width: 70),
+
                 Expanded(
                   child: _aboutText(),
                 ),
@@ -656,9 +735,9 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
-  // ============================================================
+  // =========================================================
   // WHY URBANOVA
-  // ============================================================
+  // =========================================================
 
   Widget _buildWhyUrbanova(bool isMobile) {
     final items = [
@@ -786,9 +865,9 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
-  // ============================================================
+  // =========================================================
   // CTA
-  // ============================================================
+  // =========================================================
 
   Widget _buildCTA(bool isMobile) {
     return Container(
@@ -837,7 +916,14 @@ class _HomeScreenState extends State<HomeScreen>
           const SizedBox(height: 25),
 
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ContactScreen(),
+                ),
+              );
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
               foregroundColor: AppColors.deepBlue,
@@ -861,9 +947,9 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
-  // ============================================================
+  // =========================================================
   // FOOTER
-  // ============================================================
+  // =========================================================
 
   Widget _buildFooter(bool isMobile) {
     return Container(
@@ -920,9 +1006,9 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
-  // ============================================================
+  // =========================================================
   // MOBILE DRAWER
-  // ============================================================
+  // =========================================================
 
   Widget _buildMobileDrawer() {
     return Drawer(
@@ -956,10 +1042,30 @@ class _HomeScreenState extends State<HomeScreen>
 
             const Divider(),
 
-            _buildDrawerItem('Home'),
+            // HOME
+            _buildDrawerItem(
+              'Home',
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
 
-            _buildDrawerItem('Services'),
+            // SERVICES
+            _buildDrawerItem(
+              'Services',
+              onTap: () {
+                Navigator.pop(context);
 
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ServicesScreen(),
+                  ),
+                );
+              },
+            ),
+
+            // ABOUT US
             _buildDrawerItem(
               'About Us',
               onTap: () {
@@ -974,7 +1080,20 @@ class _HomeScreenState extends State<HomeScreen>
               },
             ),
 
-            _buildDrawerItem('Contact Us'),
+            // CONTACT
+            _buildDrawerItem(
+              'Contact Us',
+              onTap: () {
+                Navigator.pop(context);
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ContactScreen(),
+                  ),
+                );
+              },
+            ),
           ],
         ),
       ),

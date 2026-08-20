@@ -73,9 +73,16 @@ flutter:
     - assets/images/tech.jpg
     - assets/images/hero.jpg
     - assets/images/team.jpg
+    - assets/images/custom_sw.jpg
+    - assets/images/IT_consulting.jpg
+    - assets/images/WebApp.jpg
+    - assets/images/logo_brand.jpg
+    - assets/images/graphic.jpg
+    - assets/images/video.jpg
+    - assets/images/brand_mangement.jpg
 
 
-  # An image asset can refer to one or more resolution-specific "variants", see
+  # An image asset can refer to one  or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
   # For details regarding adding assets from package dependencies, see

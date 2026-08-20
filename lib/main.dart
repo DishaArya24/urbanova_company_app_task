@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'screens/splash_screen.dart';
 
@@ -11,14 +12,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Urbanova Technologies',
+
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
+          seedColor: const Color(0xFF003EBE),
         ),
+        useMaterial3: true,
       ),
+
       home: const SplashScreen(),
-        
-        );
+    );
   }
 }
+
