@@ -45,8 +45,12 @@ class _ContactScreenState extends State<ContactScreen> {
           child: Column(
             children: [
               _buildTopBar(context),
+
+              // NEW CLEAN HERO CARD
               _buildHero(isMobile),
+
               _buildContactSection(isMobile),
+
               _buildFooter(),
             ],
           ),
@@ -79,6 +83,12 @@ class _ContactScreenState extends State<ContactScreen> {
             child: Image.asset(
               'assets/images/logo.png',
               fit: BoxFit.contain,
+              errorBuilder: (_, __, ___) {
+                return const Icon(
+                  Icons.business_rounded,
+                  color: Colors.white,
+                );
+              },
             ),
           ),
 
@@ -111,89 +121,150 @@ class _ContactScreenState extends State<ContactScreen> {
   }
 
   // ============================================================
-  // HERO
+  // HERO - GRADIENT CARD
   // ============================================================
 
   Widget _buildHero(bool isMobile) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 25 : 70,
-        vertical: isMobile ? 55 : 75,
+      padding: EdgeInsets.fromLTRB(
+        isMobile ? 20 : 70,
+        25,
+        isMobile ? 20 : 70,
+        10,
       ),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Color(0xFF050D24),
-            Color(0xFF002B80),
-            Color(0xFF0060D8),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+      color: const Color(0xFFF5F7FC),
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(
+          horizontal: isMobile ? 25 : 55,
+          vertical: isMobile ? 32 : 42,
         ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 13,
-              vertical: 8,
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [
+              Color(0xFF003EBE),
+              Color(0xFF0761DA),
+              Color(0xFF089934),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(30),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.deepBlue.withOpacity(0.18),
+              blurRadius: 30,
+              offset: const Offset(0, 15),
             ),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.08),
-              borderRadius: BorderRadius.circular(30),
-              border: Border.all(
-                color: Colors.white.withOpacity(0.12),
+          ],
+        ),
+        child: Stack(
+          children: [
+            // --------------------------------------------------
+            // DECORATIVE CIRCLE
+            // --------------------------------------------------
+
+            Positioned(
+              right: -35,
+              top: -45,
+              child: Container(
+                width: 150,
+                height: 150,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white.withOpacity(0.08),
+                ),
               ),
             ),
-            child: const Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.mail_outline_rounded,
-                  size: 15,
-                  color: AppColors.limeGreen,
+
+            Positioned(
+              right: 30,
+              bottom: -70,
+              child: Container(
+                width: 130,
+                height: 130,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.white.withOpacity(0.08),
+                    width: 20,
+                  ),
                 ),
-                SizedBox(width: 8),
+              ),
+            ),
+
+            // --------------------------------------------------
+            // CONTENT
+            // --------------------------------------------------
+
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // LABEL
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 13,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(30),
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.18),
+                    ),
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.mail_outline_rounded,
+                        size: 15,
+                        color: AppColors.limeGreen,
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        'GET IN TOUCH',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 2,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // TITLE
                 Text(
-                  'GET IN TOUCH',
+                  'Let’s build\nsomething great.',
                   style: TextStyle(
-                    fontSize: 10,
+                    fontSize: isMobile ? 34 : 48,
+                    height: 1,
                     fontWeight: FontWeight.w900,
-                    letterSpacing: 2,
+                    letterSpacing: -2,
                     color: Colors.white,
+                  ),
+                ),
+
+                const SizedBox(height: 14),
+
+                // SHORT DESCRIPTION
+                Text(
+                  'Have an idea? Let’s talk.',
+                  style: TextStyle(
+                    fontSize: isMobile ? 14 : 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white.withOpacity(0.78),
                   ),
                 ),
               ],
             ),
-          ),
-
-          const SizedBox(height: 24),
-
-          Text(
-            'Let’s build\nsomething great.',
-            style: TextStyle(
-              fontSize: isMobile ? 40 : 58,
-              height: 1,
-              fontWeight: FontWeight.w900,
-              letterSpacing: -2.5,
-              color: Colors.white,
-            ),
-          ),
-
-          const SizedBox(height: 20),
-
-          Text(
-            'Have an idea, project or business challenge? '
-            'Tell us about it and let’s find the right solution together.',
-            style: TextStyle(
-              fontSize: 16,
-              height: 1.6,
-              color: Colors.white.withOpacity(0.70),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -285,6 +356,10 @@ class _ContactScreenState extends State<ContactScreen> {
       ],
     );
   }
+
+  // ============================================================
+  // INFO CARD
+  // ============================================================
 
   Widget _infoCard(
     IconData icon,

@@ -47,15 +47,10 @@ class _AboutUsScreenState extends State<AboutUsScreen>
     super.dispose();
   }
 
-  // ============================================================
-  // BUILD
-  // ============================================================
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -63,19 +58,12 @@ class _AboutUsScreenState extends State<AboutUsScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildTopBar(),
-
               _buildHero(),
-
               _buildWhyUrbanova(),
-
               _buildMission(),
-
               _buildHowWeWork(),
-
               _buildCollaboration(),
-
               _buildCompanyInfo(),
-
               _buildBottom(),
             ],
           ),
@@ -89,11 +77,13 @@ class _AboutUsScreenState extends State<AboutUsScreen>
   // ============================================================
 
   Widget _buildTopBar() {
-    return Padding(
+    return Container(
+      width: double.infinity,
       padding: const EdgeInsets.symmetric(
         horizontal: 18,
         vertical: 10,
       ),
+      color: Colors.white,
       child: Row(
         children: [
           IconButton(
@@ -105,24 +95,23 @@ class _AboutUsScreenState extends State<AboutUsScreen>
               color: AppColors.deepBlue,
             ),
           ),
-
           const Spacer(),
-
           ShaderMask(
             shaderCallback: (bounds) {
               return const LinearGradient(
                 colors: [
-                  Color(0xFF003EBE),
-                  Color(0xFF00AEEF),
-                  Color(0xFF7AC943),
+                  AppColors.deepBlue,
+                  AppColors.skyBlue,
+                  AppColors.limeGreen,
                 ],
               ).createShader(bounds);
             },
             child: const Text(
-              'Urbanova',
+              'URBANOVA',
               style: TextStyle(
-                fontSize: 19,
-                fontWeight: FontWeight.w800,
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 1.5,
                 color: Colors.white,
               ),
             ),
@@ -146,7 +135,7 @@ class _AboutUsScreenState extends State<AboutUsScreen>
             28,
             50,
             28,
-            35,
+            40,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,7 +149,7 @@ class _AboutUsScreenState extends State<AboutUsScreen>
                 style: TextStyle(
                   fontSize: 39,
                   height: 1.05,
-                  fontWeight: FontWeight.w800,
+                  fontWeight: FontWeight.w900,
                   letterSpacing: -1.6,
                   color: AppColors.navyBlue,
                 ),
@@ -169,9 +158,8 @@ class _AboutUsScreenState extends State<AboutUsScreen>
               const SizedBox(height: 22),
 
               Text(
-                'Software development, brand design, '
-                'and performance marketing — together '
-                'under one team.',
+                'Software development, brand design, and '
+                'performance marketing — together under one team.',
                 style: TextStyle(
                   fontSize: 16,
                   height: 1.65,
@@ -204,7 +192,7 @@ class _AboutUsScreenState extends State<AboutUsScreen>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildImagePlaceholder(
+        _buildImage(
           imagePath: 'assets/images/bnglr.jpg',
           height: 230,
         ),
@@ -214,7 +202,7 @@ class _AboutUsScreenState extends State<AboutUsScreen>
             28,
             35,
             28,
-            20,
+            30,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -228,7 +216,7 @@ class _AboutUsScreenState extends State<AboutUsScreen>
                 style: TextStyle(
                   fontSize: 29,
                   height: 1.15,
-                  fontWeight: FontWeight.w800,
+                  fontWeight: FontWeight.w900,
                   color: AppColors.navyBlue,
                 ),
               ),
@@ -236,10 +224,9 @@ class _AboutUsScreenState extends State<AboutUsScreen>
               const SizedBox(height: 17),
 
               Text(
-                'We started Urbanova because businesses were '
-                'tired of stitching their product, their brand, '
-                'and their growth together across three separate '
-                'vendors who never talked to each other.',
+                'We bring technology, design, and marketing '
+                'together so businesses can build a stronger '
+                'digital presence with one coordinated team.',
                 style: TextStyle(
                   fontSize: 15,
                   height: 1.7,
@@ -267,19 +254,18 @@ class _AboutUsScreenState extends State<AboutUsScreen>
       ),
       padding: const EdgeInsets.all(27),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [
-            Color(0xFF003EBE),
-            Color(0xFF0058D4),
-            Color(0xFF008BD0),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        gradient: AppColors.blueGradient,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color:Color(0xFFDCE7F5),
-        )
+          color: const Color(0xFFDCE7F5),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.deepBlue.withOpacity(0.12),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -301,19 +287,19 @@ class _AboutUsScreenState extends State<AboutUsScreen>
             style: TextStyle(
               fontSize: 31,
               height: 1.12,
-              fontWeight: FontWeight.w800,
+              fontWeight: FontWeight.w900,
               color: Colors.white,
             ),
           ),
 
           const SizedBox(height: 18),
 
-          Text(
+          const Text(
             'Give growing businesses access to product, '
             'design, and marketing expertise that usually '
-            'only comes from three separate specialist '
-            'agencies — coordinated as one team, working '
-            'toward the same outcome.',
+            'comes from separate specialist teams — '
+            'coordinated as one team working toward the '
+            'same outcome.',
             style: TextStyle(
               fontSize: 15,
               height: 1.7,
@@ -321,7 +307,7 @@ class _AboutUsScreenState extends State<AboutUsScreen>
             ),
           ),
 
-          const SizedBox(height: 25),
+          const SizedBox(height: 28),
 
           Row(
             children: [
@@ -335,7 +321,10 @@ class _AboutUsScreenState extends State<AboutUsScreen>
     );
   }
 
-  Widget _missionItem(String number, String title) {
+  Widget _missionItem(
+    String number,
+    String title,
+  ) {
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -344,11 +333,13 @@ class _AboutUsScreenState extends State<AboutUsScreen>
             number,
             style: const TextStyle(
               fontSize: 10,
-              fontWeight: FontWeight.w800,
-              color: Color(0xFFB8F34A),
+              fontWeight: FontWeight.w900,
+              color: AppColors.limeGreen,
             ),
           ),
+
           const SizedBox(height: 5),
+
           Text(
             title,
             style: const TextStyle(
@@ -362,8 +353,7 @@ class _AboutUsScreenState extends State<AboutUsScreen>
     );
   }
 
-  // =======================-
-  
+  // ============================================================
   // HOW WE WORK
   // ============================================================
 
@@ -373,7 +363,7 @@ class _AboutUsScreenState extends State<AboutUsScreen>
         28,
         55,
         28,
-        30,
+        35,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -383,10 +373,10 @@ class _AboutUsScreenState extends State<AboutUsScreen>
           const SizedBox(height: 20),
 
           const Text(
-            'Small, senior team.',
+            'Small, focused team.',
             style: TextStyle(
               fontSize: 30,
-              fontWeight: FontWeight.w800,
+              fontWeight: FontWeight.w900,
               color: AppColors.navyBlue,
             ),
           ),
@@ -394,9 +384,10 @@ class _AboutUsScreenState extends State<AboutUsScreen>
           const SizedBox(height: 15),
 
           Text(
-            "Direct communication. We'd rather ship a working "
-            "version and iterate with you than disappear for "
-            "months behind a spec document.",
+            'We believe in direct communication and practical '
+            'execution. We build, test, learn, and improve '
+            'continuously instead of hiding behind complicated '
+            'processes.',
             style: TextStyle(
               fontSize: 15,
               height: 1.7,
@@ -406,7 +397,7 @@ class _AboutUsScreenState extends State<AboutUsScreen>
 
           const SizedBox(height: 28),
 
-          _buildImagePlaceholder(
+          _buildImage(
             imagePath: 'assets/images/tech.jpg',
             height: 210,
           ),
@@ -421,6 +412,7 @@ class _AboutUsScreenState extends State<AboutUsScreen>
 
   Widget _buildCollaboration() {
     return Container(
+      width: double.infinity,
       margin: const EdgeInsets.only(top: 25),
       padding: const EdgeInsets.fromLTRB(
         28,
@@ -441,7 +433,7 @@ class _AboutUsScreenState extends State<AboutUsScreen>
             style: TextStyle(
               fontSize: 29,
               height: 1.15,
-              fontWeight: FontWeight.w800,
+              fontWeight: FontWeight.w900,
               color: AppColors.navyBlue,
             ),
           ),
@@ -449,9 +441,10 @@ class _AboutUsScreenState extends State<AboutUsScreen>
           const SizedBox(height: 17),
 
           Text(
-            'You talk to the person building your software '
-            'or running your campaign — not a rotating cast '
-            'of account managers relaying messages back and forth.',
+            'We keep communication simple and transparent. '
+            'You can work directly with the people involved '
+            'in building your product, creating your brand, '
+            'or growing your digital presence.',
             style: TextStyle(
               fontSize: 15,
               height: 1.7,
@@ -461,7 +454,7 @@ class _AboutUsScreenState extends State<AboutUsScreen>
 
           const SizedBox(height: 28),
 
-          _buildImagePlaceholder(
+          _buildImage(
             imagePath: 'assets/images/senior.jpg',
             height: 220,
           ),
@@ -513,7 +506,10 @@ class _AboutUsScreenState extends State<AboutUsScreen>
     );
   }
 
-  Widget _infoItem(String title, String value) {
+  Widget _infoItem(
+    String title,
+    String value,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -544,7 +540,9 @@ class _AboutUsScreenState extends State<AboutUsScreen>
 
   Widget _infoDivider() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(
+        vertical: 20,
+      ),
       child: Divider(
         color: Colors.grey.shade200,
         height: 1,
@@ -553,7 +551,7 @@ class _AboutUsScreenState extends State<AboutUsScreen>
   }
 
   // ============================================================
-  // BOTTOM
+  // BOTTOM SECTION
   // ============================================================
 
   Widget _buildBottom() {
@@ -568,6 +566,7 @@ class _AboutUsScreenState extends State<AboutUsScreen>
         children: [
           const Text(
             'URBANOVA TECHNOLOGIES',
+            textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.w800,
@@ -584,7 +583,7 @@ class _AboutUsScreenState extends State<AboutUsScreen>
             style: TextStyle(
               fontSize: 27,
               height: 1.15,
-              fontWeight: FontWeight.w800,
+              fontWeight: FontWeight.w900,
               color: Colors.white,
             ),
           ),
@@ -599,6 +598,17 @@ class _AboutUsScreenState extends State<AboutUsScreen>
               borderRadius: BorderRadius.circular(10),
             ),
           ),
+
+          const SizedBox(height: 25),
+
+          const Text(
+            '© 2026 Urbanova Technologies Private Limited',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white38,
+              fontSize: 10,
+            ),
+          ),
         ],
       ),
     );
@@ -608,44 +618,42 @@ class _AboutUsScreenState extends State<AboutUsScreen>
   // IMAGE
   // ============================================================
 
-  Widget _buildImagePlaceholder({
+  Widget _buildImage({
     required String imagePath,
     required double height,
   }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 0),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Image.asset(
-          imagePath,
-          width: double.infinity,
-          height: height,
-          fit: BoxFit.cover,
-
-          // If you haven't added the image yet,
-          // the app won't crash.
-          errorBuilder: (context, error, stackTrace) {
-            return Container(
-              height: height,
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xFFEAF1FF),
-                    Color(0xFFF5F8FC),
-                  ],
-                ),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: Image.asset(
+        imagePath,
+        width: double.infinity,
+        height: height,
+        fit: BoxFit.cover,
+        errorBuilder: (
+          context,
+          error,
+          stackTrace,
+        ) {
+          return Container(
+            height: height,
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xFFEAF1FF),
+                  Color(0xFFF5F8FC),
+                ],
               ),
-              child: const Center(
-                child: Icon(
-                  Icons.image_outlined,
-                  size: 55,
-                  color: AppColors.deepBlue,
-                ),
+            ),
+            child: const Center(
+              child: Icon(
+                Icons.image_outlined,
+                size: 55,
+                color: AppColors.deepBlue,
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }

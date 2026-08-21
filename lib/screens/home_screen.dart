@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+
 import '../core/app_colors.dart';
+import '../models/service_model.dart';
+import '../services/services_data_service.dart';
+
 import 'about_us_screen.dart';
 import 'services_screen.dart';
+import 'service_details_screen.dart';
 import 'contact_screen.dart';
+import 'client_details_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,6 +24,46 @@ class _HomeScreenState extends State<HomeScreen>
   late Animation<Offset> _slideAnimation;
 
   bool _isButtonHovered = false;
+
+  // =========================================================
+  // SERVICES
+  // Loaded from JSON
+  // =========================================================
+
+  List<ServiceModel> _services = [];
+  bool _isLoadingServices = true;
+
+  // =========================================================
+  // CLIENTS
+  // =========================================================
+
+  final List<Map<String, String>> _clients = [
+    {
+      'name': 'Big Bean Cafe',
+      'category': 'Cafe & Food',
+      'image': 'assets/images/bigbean.jpg',
+      'description':
+          'A modern digital experience designed to help Big Bean Cafe connect with its customers.',
+    },
+    {
+      'name': 'World Bean Coffee Roasters',
+      'category': 'Coffee & Lifestyle',
+      'image': 'assets/images/worldbean.jpg',
+      'description':
+          'A digital presence created to showcase the brand and its coffee experience.',
+    },
+    {
+      'name': 'Vivin Store',
+      'category': 'Retail & E-commerce',
+      'image': 'assets/images/vivin.jpg',
+      'description':
+          'A clean and engaging digital experience designed for a modern retail brand.',
+    },
+  ];
+
+  // =========================================================
+  // INIT
+  // =========================================================
 
   @override
   void initState() {
@@ -44,6 +90,29 @@ class _HomeScreenState extends State<HomeScreen>
     );
 
     _animationController.forward();
+
+    _loadServices();
+  }
+
+  Future<void> _loadServices() async {
+    try {
+      final services = await ServiceData.loadServices();
+
+      if (!mounted) return;
+
+      setState(() {
+        _services = services;
+        _isLoadingServices = false;
+      });
+    } catch (e) {
+      debugPrint('Error loading services: $e');
+
+      if (!mounted) return;
+
+      setState(() {
+        _isLoadingServices = false;
+      });
+    }
   }
 
   @override
@@ -52,21 +121,15 @@ class _HomeScreenState extends State<HomeScreen>
     super.dispose();
   }
 
+  // =========================================================
+  // BUILD
+  // =========================================================
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-
-      // =========================================================
-      // DRAWER
-      // =========================================================
-
       endDrawer: _buildMobileDrawer(),
-
-      // =========================================================
-      // BODY
-      // =========================================================
-
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -80,6 +143,7 @@ class _HomeScreenState extends State<HomeScreen>
                   _buildServices(isMobile),
                   _buildWhoWeAre(isMobile),
                   _buildWhyUrbanova(isMobile),
+                  _buildClients(isMobile),
                   _buildCTA(isMobile),
                   _buildFooter(isMobile),
                 ],
@@ -103,7 +167,6 @@ class _HomeScreenState extends State<HomeScreen>
       ),
       child: Row(
         children: [
-          // LOGO
           Row(
             children: [
               Image.asset(
@@ -139,13 +202,10 @@ class _HomeScreenState extends State<HomeScreen>
 
           const Spacer(),
 
-          // DESKTOP NAVIGATION
           if (!isMobile) ...[
             _buildNavText(
               'Home',
-              onTap: () {
-                // Already on Home
-              },
+              onTap: () {},
             ),
 
             _buildNavText(
@@ -185,7 +245,6 @@ class _HomeScreenState extends State<HomeScreen>
             ),
           ],
 
-          // HAMBURGER
           Builder(
             builder: (context) {
               return IconButton(
@@ -245,7 +304,7 @@ class _HomeScreenState extends State<HomeScreen>
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Color(0xFFFFFFFF),
+            Colors.white,
             Color(0xFFF4F8FF),
           ],
           begin: Alignment.topCenter,
@@ -262,7 +321,6 @@ class _HomeScreenState extends State<HomeScreen>
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // LEFT
         Expanded(
           child: FadeTransition(
             opacity: _fadeAnimation,
@@ -310,7 +368,6 @@ class _HomeScreenState extends State<HomeScreen>
 
         const SizedBox(width: 60),
 
-        // RIGHT IMAGE
         Expanded(
           child: FadeTransition(
             opacity: _fadeAnimation,
@@ -390,7 +447,12 @@ class _HomeScreenState extends State<HomeScreen>
           width: 28,
           height: 4,
           decoration: BoxDecoration(
-            color: AppColors.limeGreen,
+            gradient: const LinearGradient(
+              colors: [
+                Color(0xFF003EBE),
+                Color(0xFF7AC943),
+              ],
+            ),
             borderRadius: BorderRadius.circular(10),
           ),
         ),
@@ -461,9 +523,7 @@ class _HomeScreenState extends State<HomeScreen>
                   fontWeight: FontWeight.w600,
                 ),
               ),
-
               SizedBox(width: 8),
-
               Icon(
                 Icons.arrow_forward_rounded,
                 size: 18,
@@ -484,7 +544,7 @@ class _HomeScreenState extends State<HomeScreen>
       width: double.infinity,
       padding: EdgeInsets.symmetric(
         horizontal: isMobile ? 24 : 70,
-        vertical: 75,
+        vertical: 70,
       ),
       child: Column(
         children: [
@@ -493,123 +553,10 @@ class _HomeScreenState extends State<HomeScreen>
           const SizedBox(height: 18),
 
           const Text(
-            'Solutions built around\nyour business.',
+            'Our services',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 34,
-              height: 1.15,
-              fontWeight: FontWeight.w800,
-              color: AppColors.navyBlue,
-            ),
-          ),
-
-          const SizedBox(height: 45),
-
-          isMobile
-              ? Column(
-                  children: [
-                    _serviceCard(
-                      Icons.code_rounded,
-                      'Software Development',
-                      'Digital products built to solve real business problems.',
-                    ),
-
-                    const SizedBox(height: 18),
-
-                    _serviceCard(
-                      Icons.auto_awesome_rounded,
-                      'Brand Design',
-                      'Visual identities that make businesses memorable.',
-                    ),
-
-                    const SizedBox(height: 18),
-
-                    _serviceCard(
-                      Icons.trending_up_rounded,
-                      'Performance Marketing',
-                      'Strategies designed to turn attention into growth.',
-                    ),
-                  ],
-                )
-              : Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: _serviceCard(
-                        Icons.code_rounded,
-                        'Software Development',
-                        'Digital products built to solve real business problems.',
-                      ),
-                    ),
-
-                    const SizedBox(width: 20),
-
-                    Expanded(
-                      child: _serviceCard(
-                        Icons.auto_awesome_rounded,
-                        'Brand Design',
-                        'Visual identities that make businesses memorable.',
-                      ),
-                    ),
-
-                    const SizedBox(width: 20),
-
-                    Expanded(
-                      child: _serviceCard(
-                        Icons.trending_up_rounded,
-                        'Performance Marketing',
-                        'Strategies designed to turn attention into growth.',
-                      ),
-                    ),
-                  ],
-                ),
-        ],
-      ),
-    );
-  }
-
-  Widget _serviceCard(
-    IconData icon,
-    String title,
-    String description,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(26),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF7F9FD),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: const Color(0xFFE7ECF5),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 52,
-            height: 52,
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [
-                  Color(0xFF003EBE),
-                  Color(0xFF00AEEF),
-                ],
-              ),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Icon(
-              icon,
-              color: Colors.white,
-              size: 25,
-            ),
-          ),
-
-          const SizedBox(height: 22),
-
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 19,
               fontWeight: FontWeight.w800,
               color: AppColors.navyBlue,
             ),
@@ -618,16 +565,212 @@ class _HomeScreenState extends State<HomeScreen>
           const SizedBox(height: 10),
 
           Text(
-            description,
+            'Simple solutions for modern businesses.',
+            textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 14,
-              height: 1.5,
+              fontSize: 15,
               color: Colors.grey.shade600,
+            ),
+          ),
+
+          const SizedBox(height: 35),
+
+          if (_isLoadingServices)
+            const Padding(
+              padding: EdgeInsets.all(30),
+              child: CircularProgressIndicator(
+                color: AppColors.deepBlue,
+              ),
+            )
+          else if (_services.isEmpty)
+            const Padding(
+              padding: EdgeInsets.all(30),
+              child: Text(
+                'Unable to load services.',
+                style: TextStyle(
+                  color: Colors.grey,
+                ),
+              ),
+            )
+          else
+            isMobile
+                ? Column(
+                    children: _services
+                        .take(5)
+                        .map(
+                          (service) => Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: _serviceCard(service),
+                          ),
+                        )
+                        .toList(),
+                  )
+                : Wrap(
+                    spacing: 20,
+                    runSpacing: 20,
+                    children: _services.take(5).map((service) {
+                      return SizedBox(
+                        width: 300,
+                        child: _serviceCard(service),
+                      );
+                    }).toList(),
+                  ),
+
+          const SizedBox(height: 25),
+
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ServicesScreen(),
+                ),
+              );
+            },
+            child: const Text(
+              'View all services →',
+              style: TextStyle(
+                color: AppColors.deepBlue,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
         ],
       ),
     );
+  }
+
+  Widget _serviceCard(ServiceModel service) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(20),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ServiceDetailsScreen(
+              title: service.title,
+              icon: _getIcon(service.icon),
+              description: service.description,
+              gradient: _getGradient(service.gradient),
+              image: service.image,
+              detail: service.detail,
+              features: service.features,
+            ),
+          ),
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(22),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: const Color(0xFFE7ECF5),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.blue.withOpacity(0.06),
+              blurRadius: 18,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 54,
+              height: 54,
+              decoration: BoxDecoration(
+                gradient: _getGradient(service.gradient),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Icon(
+                _getIcon(service.icon),
+                color: Colors.white,
+                size: 25,
+              ),
+            ),
+
+            const SizedBox(width: 16),
+
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    service.title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.navyBlue,
+                    ),
+                  ),
+
+                  const SizedBox(height: 6),
+
+                  Text(
+                    service.description,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 13,
+                      height: 1.4,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const Icon(
+              Icons.arrow_forward_ios_rounded,
+              size: 15,
+              color: AppColors.deepBlue,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // =========================================================
+  // ICON / GRADIENT HELPERS
+  // =========================================================
+
+  IconData _getIcon(String icon) {
+    switch (icon) {
+      case 'code':
+        return Icons.code_rounded;
+
+      case 'phone_android':
+        return Icons.phone_android_rounded;
+
+      case 'brush':
+        return Icons.brush_rounded;
+
+      case 'palette':
+        return Icons.palette_rounded;
+
+      case 'rocket':
+        return Icons.rocket_launch_rounded;
+
+      case 'trending_up':
+        return Icons.trending_up_rounded;
+
+      default:
+        return Icons.apps_rounded;
+    }
+  }
+
+  LinearGradient _getGradient(String gradient) {
+    switch (gradient) {
+      case 'green':
+        return AppColors.greenGradient;
+
+      case 'blue':
+      default:
+        return AppColors.blueGradient;
+    }
   }
 
   // =========================================================
@@ -639,7 +782,7 @@ class _HomeScreenState extends State<HomeScreen>
       width: double.infinity,
       padding: EdgeInsets.symmetric(
         horizontal: isMobile ? 24 : 70,
-        vertical: 75,
+        vertical: 70,
       ),
       color: const Color(0xFFF4F8FF),
       child: isMobile
@@ -647,9 +790,7 @@ class _HomeScreenState extends State<HomeScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _aboutImage(),
-
                 const SizedBox(height: 35),
-
                 _aboutText(),
               ],
             )
@@ -658,9 +799,7 @@ class _HomeScreenState extends State<HomeScreen>
                 Expanded(
                   child: _aboutImage(),
                 ),
-
                 const SizedBox(width: 70),
-
                 Expanded(
                   child: _aboutText(),
                 ),
@@ -702,9 +841,9 @@ class _HomeScreenState extends State<HomeScreen>
         const SizedBox(height: 20),
 
         Text(
-          'Urbanova brings software development, '
-          'brand design, and performance marketing '
-          'together under one team.',
+          'Urbanova brings technology, creativity and '
+          'strategy together to help businesses build '
+          'meaningful digital experiences.',
           style: TextStyle(
             fontSize: 16,
             height: 1.6,
@@ -712,7 +851,7 @@ class _HomeScreenState extends State<HomeScreen>
           ),
         ),
 
-        const SizedBox(height: 25),
+        const SizedBox(height: 20),
 
         TextButton(
           onPressed: () {
@@ -762,19 +901,11 @@ class _HomeScreenState extends State<HomeScreen>
       width: double.infinity,
       padding: EdgeInsets.symmetric(
         horizontal: isMobile ? 24 : 70,
-        vertical: 75,
+        vertical: 70,
       ),
       child: Column(
         children: [
-          const Text(
-            'WHY URBANOVA',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w800,
-              letterSpacing: 2,
-              color: AppColors.deepBlue,
-            ),
-          ),
+          _smallLabel('WHY URBANOVA'),
 
           const SizedBox(height: 15),
 
@@ -788,7 +919,18 @@ class _HomeScreenState extends State<HomeScreen>
             ),
           ),
 
-          const SizedBox(height: 40),
+          const SizedBox(height: 12),
+
+          Text(
+            'Technology, creativity and strategy working together.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 15,
+              color: Colors.grey.shade600,
+            ),
+          ),
+
+          const SizedBox(height: 35),
 
           isMobile
               ? Column(
@@ -803,7 +945,6 @@ class _HomeScreenState extends State<HomeScreen>
                       .toList(),
                 )
               : Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: items
                       .map(
                         (item) => Expanded(
@@ -831,10 +972,23 @@ class _HomeScreenState extends State<HomeScreen>
       padding: const EdgeInsets.all(22),
       child: Column(
         children: [
-          Icon(
-            icon,
-            size: 32,
-            color: AppColors.deepBlue,
+          Container(
+            width: 58,
+            height: 58,
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [
+                  Color(0xFF003EBE),
+                  Color(0xFF7AC943),
+                ],
+              ),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              size: 27,
+              color: Colors.white,
+            ),
           ),
 
           const SizedBox(height: 16),
@@ -866,6 +1020,188 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   // =========================================================
+  // CLIENTS
+  // =========================================================
+
+  Widget _buildClients(bool isMobile) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 24 : 70,
+        vertical: 70,
+      ),
+      color: const Color(0xFFF4F8FF),
+      child: Column(
+        children: [
+          _smallLabel('FEATURED CLIENTS'),
+
+          const SizedBox(height: 18),
+
+          const Text(
+            'Brands we’ve helped\nmove forward.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 34,
+              height: 1.15,
+              fontWeight: FontWeight.w800,
+              color: AppColors.navyBlue,
+            ),
+          ),
+
+          const SizedBox(height: 35),
+
+          AspectRatio(
+            aspectRatio: isMobile ? 0.95 : 1.55,
+            child: PageView.builder(
+              controller: PageController(
+                viewportFraction: isMobile ? 0.92 : 0.72,
+              ),
+              itemCount: _clients.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                  child: _buildClientCard(_clients[index]),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildClientCard(
+    Map<String, String> client,
+  ) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(24),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ClientDetailsScreen(
+              clientName: client['name']!,
+              category: client['category']!,
+              image: client['image']!,
+              description: client['description']!,
+            ),
+          ),
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.06),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 5,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(18),
+                child: Image.asset(
+                  client['image']!,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  errorBuilder: (
+                    context,
+                    error,
+                    stackTrace,
+                  ) {
+                    return Container(
+                      width: double.infinity,
+                      color: const Color(0xFFEAF1FF),
+                      child: const Center(
+                        child: Icon(
+                          Icons.image_outlined,
+                          size: 45,
+                          color: AppColors.deepBlue,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 14),
+
+            Text(
+              client['category']!.toUpperCase(),
+              style: const TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 1.4,
+                color: AppColors.deepBlue,
+              ),
+            ),
+
+            const SizedBox(height: 6),
+
+            Text(
+              client['name']!,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 21,
+                fontWeight: FontWeight.w800,
+                color: AppColors.navyBlue,
+              ),
+            ),
+
+            const SizedBox(height: 7),
+
+            Expanded(
+              flex: 2,
+              child: Text(
+                client['description']!,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 13,
+                  height: 1.45,
+                  color: Colors.grey.shade600,
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'View Project',
+                  style: TextStyle(
+                    color: AppColors.deepBlue,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                SizedBox(width: 6),
+                Icon(
+                  Icons.arrow_forward_rounded,
+                  size: 16,
+                  color: AppColors.deepBlue,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // =========================================================
   // CTA
   // =========================================================
 
@@ -886,6 +1222,7 @@ class _HomeScreenState extends State<HomeScreen>
             Color(0xFF003EBE),
             Color(0xFF006FD6),
             Color(0xFF00AEEF),
+            Color(0xFF7AC943),
           ],
         ),
         borderRadius: BorderRadius.circular(28),
@@ -1042,7 +1379,6 @@ class _HomeScreenState extends State<HomeScreen>
 
             const Divider(),
 
-            // HOME
             _buildDrawerItem(
               'Home',
               onTap: () {
@@ -1050,7 +1386,6 @@ class _HomeScreenState extends State<HomeScreen>
               },
             ),
 
-            // SERVICES
             _buildDrawerItem(
               'Services',
               onTap: () {
@@ -1065,7 +1400,6 @@ class _HomeScreenState extends State<HomeScreen>
               },
             ),
 
-            // ABOUT US
             _buildDrawerItem(
               'About Us',
               onTap: () {
@@ -1080,7 +1414,6 @@ class _HomeScreenState extends State<HomeScreen>
               },
             ),
 
-            // CONTACT
             _buildDrawerItem(
               'Contact Us',
               onTap: () {

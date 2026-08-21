@@ -1,0 +1,106 @@
+{
+  "services": [
+    {
+      "id": 1,
+      "category": "BUILD",
+      "categorySubtitle": "Technology & Digital Products",
+      "title": "Software Development",
+      "description": "Scalable software solutions built around your business.",
+      "detail": "Urbanova helps businesses transform ideas into reliable software products designed around their real requirements. From planning and development to deployment, we create solutions that are scalable, practical and built for growth.",
+      "image": "assets/images/custom_sw.jpg",
+      "icon": "code",
+      "gradient": "blue",
+      "features": [
+        "Custom software solutions",
+        "Business process solutions",
+        "Scalable architecture",
+        "Reliable application development"
+      ]
+    },
+    {
+      "id": 2,
+      "category": "BUILD",
+      "categorySubtitle": "Technology & Digital Products",
+      "title": "Web & App Development",
+      "description": "Modern digital experiences across every screen.",
+      "detail": "Urbanova creates modern websites and mobile applications that combine clean design, smooth experiences and reliable technology to help businesses connect with their customers.",
+      "image": "assets/images/WebApp.jpg",
+      "icon": "phone_android",
+      "gradient": "green",
+      "features": [
+        "Responsive websites",
+        "Mobile applications",
+        "Modern UI experiences",
+        "Business-focused digital products"
+      ]
+    },
+    {
+      "id": 3,
+      "category": "DESIGN",
+      "categorySubtitle": "Brand & Visual Experience",
+      "title": "Brand & Logo Design",
+      "description": "Visual identities that make your brand memorable.",
+      "detail": "Urbanova creates distinctive brand identities that help businesses communicate their personality and stand out. We focus on creating visual identities that are simple, recognizable and memorable.",
+      "image": "assets/images/logo_brand.jpg",
+      "icon": "brush",
+      "gradient": "green",
+      "features": [
+        "Logo and identity design",
+        "Brand guidelines",
+        "Creative direction",
+        "Visual communication"
+      ]
+    },
+    {
+      "id": 4,
+      "category": "DESIGN",
+      "categorySubtitle": "Brand & Visual Experience",
+      "title": "Graphic Design",
+      "description": "Creative visuals for your digital presence.",
+      "detail": "From social media creatives to marketing materials, Urbanova creates clean and engaging visual designs that keep your brand consistent across different platforms.",
+      "image": "assets/images/graphic.jpg",
+      "icon": "palette",
+      "gradient": "blue",
+      "features": [
+        "Social media creatives",
+        "Marketing materials",
+        "Digital graphics",
+        "Consistent visual identity"
+      ]
+    },
+    {
+      "id": 5,
+      "category": "GROW",
+      "categorySubtitle": "Marketing & Growth",
+      "title": "Digital Marketing",
+      "description": "Strategies that turn attention into growth.",
+      "detail": "Urbanova helps businesses reach the right audience through digital marketing strategies focused on visibility, engagement and measurable business results.",
+      "image": "assets/images/video.jpg",
+      "icon": "rocket",
+      "gradient": "blue",
+      "features": [
+        "Digital strategy",
+        "Content campaigns",
+        "Audience targeting",
+        "Performance-focused marketing"
+      ]
+    },
+    {
+      "id": 6,
+      "category": "GROW",
+      "categorySubtitle": "Marketing & Growth",
+      "title": "Social Media & SEO",
+      "description": "Build visibility and meaningful online connections.",
+      "detail": "Urbanova combines social media and SEO strategies to help businesses get discovered, build a stronger online presence and create meaningful connections with their audience.",
+      "image": "assets/images/img4.jpg",
+      "icon": "trending_up",
+      "gradient": "green",
+      "features": [
+        "Social media strategy",
+        "Search engine optimization",
+        "Online visibility",
+        "Audience engagement"
+      ]
+    }
+  ]
+}
